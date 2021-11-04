@@ -13,11 +13,13 @@ fun solvePerLine(input: String): String {
     val max = Array<Int>(4) { it -> 0 } //min x, min y, max x, max y
     actions.forEach { action ->
         repeat(action.times) {
-            current = current.addMove(action.move)
-            max[0] = min(max[0], current.x)
-            max[1] = min(max[1], current.y)
-            max[2] = max(max[2], current.x)
-            max[3] = max(max[3], current.y)
+            for (step in action.move) {
+                current = current.addMove(step)
+                max[0] = min(max[0], current.x)
+                max[1] = min(max[1], current.y)
+                max[2] = max(max[2], current.x)
+                max[3] = max(max[3], current.y)
+            }
         }
     }
 
@@ -45,33 +47,31 @@ enum class Orientation {
 }
 
 data class Coordinate(var x: Int, var y: Int, var orientation: Orientation = Orientation.NORTH) {
-    fun addMove(move: String): Coordinate {
+    fun addMove(step: Char): Coordinate {
         var o = this.orientation
         var newC = this.copy()
 
-        for (c in move) {
-            when (c) {
-                'F' -> {
-                    when (o) {
-                        Orientation.NORTH -> newC.y -= 1
-                        Orientation.EAST -> newC.x += 1
-                        Orientation.SOUTH -> newC.y += 1
-                        Orientation.WEST -> newC.x -= 1
-                    }
-                }
-                'L' -> {
-                    var res = o.ordinal - 1
-                    if (res < 0) {
-                        res = 3
-                    }
-                    o = Orientation.values()[res]
-                }
-                'R' -> {
-                    o = Orientation.values()[(o.ordinal + 1) % 4]
+        when (step) {
+            'F' -> {
+                when (o) {
+                    Orientation.NORTH -> newC.y -= 1
+                    Orientation.EAST -> newC.x += 1
+                    Orientation.SOUTH -> newC.y += 1
+                    Orientation.WEST -> newC.x -= 1
                 }
             }
-            newC.orientation = o
+            'L' -> {
+                var res = o.ordinal - 1
+                if (res < 0) {
+                    res += 4
+                }
+                o = Orientation.values()[res]
+            }
+            'R' -> {
+                o = Orientation.values()[(o.ordinal + 1) % 4]
+            }
         }
+        newC.orientation = o
 
         return newC
     }
