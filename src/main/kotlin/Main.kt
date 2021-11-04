@@ -1,25 +1,37 @@
+import level1.solve
+import java.io.File
+import java.io.FileNotFoundException
+import java.nio.file.Files
+import java.nio.file.Paths
+import kotlin.io.path.readText
+
+
 fun main(args: Array<String>) {
-    println("File Output summed:")
-    println(getResourceAsInts("file.txt").sum())
-    if(args.get(0) == "1"){
-        //TODO
-    }
-    else if(args.get(0) == "2"){
-        //TODO
-    }
-    else if(args.get(0) == "3"){
-        //TODO
-    }
-    else if(args.get(0) == "4"){
-        //TODO
-    }
-    else if(args.get(0) == "5"){
-        //TODO
-    }
-    else if(args.get(0) == "6"){
-        //TODO
-    }
-    else if(args.get(0) == "7"){
-        //TODO
-    }
+    println("...starting")
+    val solutions = solveAllInputs();
+    saveSolutions(*solutions.toTypedArray())
+}
+
+fun solveAllInputs(): List<Solution> {
+    var inputs = getAllResourcePaths()
+    inputs = inputs.filter { it.fileName.toString().lowercase().endsWith(".txt") }
+    return inputs
+        .map { Solution(solve(it.readText()), "outputfor_" + it.fileName.toString()) }
+}
+
+fun solveInput(i: Number): Solution {
+    val input = getAllResourcePaths()
+        .find { it.fileName.endsWith(".txt") && (it.fileName.startsWith("input${i}")) } ?: throw FileNotFoundException("Input ${i} was not found")
+    return Solution(solve(input.readText()), "solution_" + input.fileName.toString())
+}
+
+fun saveSolutions(vararg solutions: Solution) {
+    solutions
+        .forEach {
+            Files.createDirectories(Paths.get("output"))
+            File("output/${it.name}.txt").bufferedWriter().use { out ->
+                out.write(it.solution)
+                println("Saved: ${it.name}")
+            }
+        }
 }
