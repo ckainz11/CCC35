@@ -1,4 +1,4 @@
-import level1.solve
+import level2.solve
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Files
