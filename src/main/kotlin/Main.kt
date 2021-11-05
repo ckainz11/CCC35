@@ -1,4 +1,4 @@
-import level1.solve
+import level2.solve
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Files
@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
 
 fun solveAllInputs(): List<Solution> {
     var inputs = getAllResourcePaths()
-    inputs = inputs.filter { it.fileName.toString().lowercase().endsWith(".txt") }
+    inputs = inputs.filter { it.fileName.toString().lowercase().endsWith(".in") }
     return inputs
         .map { Solution(solve(it.readText()), "outputfor_" + it.fileName.toString()) }
 }
